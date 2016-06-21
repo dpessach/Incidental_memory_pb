@@ -1,0 +1,472 @@
+<!doctype html>
+<html>
+  <head>
+	<title>Experiment Universit&aumlt Z&uumlrich </title>
+		<script src="js/jquery.min.js"></script>
+		<script src="js/jquery-ui.min.js"></script>
+		<script src="js/snap.svg-min.js"></script>
+		<script src="../jspsych_new.js"></script>
+		<script src="../plugins/jspsych-single-stim.js"></script>
+		<script src="../plugins/jspsych-single-stim-wl.js"></script>
+		<script src="../plugins/jspsych-instructions.js"></script>
+		<script src="../plugins/jspsych-html.js"></script>
+		<script src="../plugins/jspsych-text_adapted.js"></script>
+		<script src="../plugins/jspsych-survey-dp.js"></script>
+		<script src="../plugins/jspsych-survey-text.js"></script>
+		<script src="../plugins/jspsych-fullscreen.js"></script>
+		<script src="../plugins/jspsych-response-table-dp.js"></script>
+		<script src="./words.js"></script>
+		<script src="./texts_EN.js"></script>
+		<link rel="stylesheet" href="css/jquery-ui.css"></link>
+		<link rel="stylesheet" href="../css/jspsych.css" type="text/css"></link>
+  </head>
+  <body>
+    <div id="jspsych-target"></div>
+	<div id="demo"></div>
+  </body>
+  <script>
+  
+///Settings & basics:
+
+var timeline = [];
+
+
+  var vp_ID = jsPsych.randomization.randomID(16);
+  var date = (new Date());
+  var Datum = date.toUTCString();
+
+  var screen_width = screen.width;
+      var screen_height = screen.height;
+      var centerX = screen_width*0.5
+      var centerY = screen_height*0.5
+     
+	 var errStyle = "color:red;margin-top:200px;text-align:center;font-weight:bold;";
+
+	 function getPar(str,style){
+        if (typeof style == "undefined"){
+          style='';
+        }
+        return "<div class='jspsych-display-element'><p style='"+style+"'>"+str+"</p><div>"
+      }
+	  
+		  	
+jsPsych.data.addProperties({
+	Datum: Datum,
+	VP: vp_ID
+	});
+
+	
+	
+// Fixation cross:
+function getCrossTable(linelength){
+            var table = "<table style='margin:0 auto;border-collapse:collapse;position:relative;top:"+(screen.height*.5-linelength).toString()+"px;'>"
+            var tdStyles =
+                ["height:"+linelength+"px;width:"+linelength+"px;border-right:4px solid black;border-bottom:4px solid black;",
+                 "height:"+linelength+"px;width:"+linelength+"px;border-left:4px solid black;border-bottom:4px solid black;",
+                 "height:"+linelength+"px;width:"+linelength+"px;border-right:4px solid black;border-top:4px solid black;",
+                 "height:"+linelength+"px;width:"+linelength+"px;border-left:4px solid black;border-top:4px solid black;"]
+            for (i=0;i<2;i++){
+              table += "<tr>"
+              for(j=0;j<2;j++){
+                idx = (i*2)+(j)
+                table += "<td style='"+tdStyles[idx]+"'/>"
+              }
+              table += "</tr>"
+            }
+            table += "</table>"
+            return table
+        }
+
+
+  var fixCross = {
+    stimulus: getCrossTable(100),
+    is_html: true
+  }
+
+  var cross = {
+    type: 'single-stim',
+    timeline: [fixCross],
+	response_ends_trial: false,
+	timing_stim: 1000,
+	timing_response:1000
+  }
+
+// Create word storages:
+
+var nBlocks = 7;
+var nItems = nBlocks*6 + 6;
+
+
+function createItemStorage(){
+        var t =[];
+		 y = jsPsych.randomization.sample(wordItems, nItems)
+		 v = jsPsych.randomization.repeat(y, 1)
+        for (i=0; i < nBlocks+1; i++){
+          x= y.splice(0, 6)
+          t.push(x)
+        }
+        return t
+      }
+
+var items = createItemStorage();
+	
+     var reg1 = items[0];
+	 var reg2 = items[1];
+	 var reg3 = items[2];
+	 var reg4 = items[3];
+	 var reg5 = items[4];
+	 var last = items[5];
+	 var test = items[6];
+	 var NPL = items[7];
+	 for (i=0;i<last.length;i++){
+		last[i].info = "last";
+	 }
+	 for (i=0;i<test.length;i++){
+		test[i].info = "test";
+	 }
+	 for (i=0;i<NPL.length;i++){
+		NPL[i].info = "NPL";
+	 }
+	 var tableItemsNR = test.concat(last, NPL);
+	 var tableItems = jsPsych.randomization.repeat(tableItemsNR, 1);
+	 
+
+var ITIs = [100, 100, 5000, 5000, 2000];
+ITI = jsPsych.randomization.repeat(ITIs, 1);
+ITI.push(2000, 5000);    		// for Version B that would be (2000, 100)
+
+function getWords(arr){
+	var allWords = [];
+	for (i=0; i<arr.length; i++){
+		var s = {stimulus: "<p>" + arr[i].text + "</p>",
+				 size: arr[i].size_difference,
+				 wordID: arr[i].word_id
+				};
+		allWords.push(s);
+	}
+	return allWords;
+}
+
+function getWordsOnly(arr){
+	var allWords = [];
+	for (i=0; i<arr.length; i++){
+		var s = arr[i].text
+		allWords.push(s);
+	}
+	return allWords;
+}
+
+var breg1= getWords(reg1);
+var breg2= getWords(reg2);
+var breg3= getWords(reg3);
+var breg4= getWords(reg4);
+var breg5= getWords(reg5);
+var blast= getWords(last);
+var btest= getWords(test);
+var btable = getWordsOnly(tableItems);
+//document.getElementById("demo").innerHTML = ITI.toString();
+
+
+//*****************************************************//////////////////*****************************************************
+//*****************************************************// Fullscreen   //*****************************************************
+//*****************************************************//////////////////*****************************************************
+
+      
+      var activate_fullscreen = {
+          type: 'fullscreen',
+          showtext: getPar(texts.warning,'margin-top:50px;'),
+          buttonStyle : 'float:right;',
+          buttontext: "Start Experiment",
+          on_fullscreen_abort: function(){
+            jsPsych.finishTrial();
+            jsPsych.endExperiment(getPar(texts.fullscreen_exit,errStyle));
+			},
+          on_hide_abort:function(){
+            jsPsych.finishTrial();
+            jsPsych.endExperiment(getPar(texts.visibility_exit,errStyle));
+          },
+          on_launch_fail: function(){
+            jsPsych.finishTrial();
+            jsPsych.endExperiment(getPar(texts.fullscreen_fail,errStyle));
+          },
+          on_hide_fail:function(){
+            jsPsych.finishTrial();
+            jsPsych.endExperiment(getPar(texts.visibility_fail,errStyle));
+          }
+      }
+timeline.push(activate_fullscreen);
+
+
+var study_info = {
+	type: 'instructions',
+	show_clickable_nav: true,
+	pages: ["<div class='center-content'><img src='uzhLogo.png' style='width:680px;height:150px'></img></div>"+
+	"<h3 style='text-align: center'>Study information</h3>"+
+	"<p>We would like to invite you to participate in our experiment. Please read carefully the following information.</p>"+
+	"<dl><dt style='font-size: 105%;line-height: 2;'>What is it about?</dt><dd>In this study, we try to find out what influences people's judgement abilities. "+
+	"Your task will be to make judgements about the size of different items.</dd>"+
+	"<dt style='font-size: 105%;line-height: 2;'>Duration and payment</dt><dd>The experiment will take 5-10 minutes and you will recieve the before mentioned payment regardless of your performance.</dd>"+
+	"<dt style='font-size: 105%;line-height: 2;'>Terms of participation</dt>"+
+	"<dd>Participation in this study is voluntarily and you can withdraw from the study at any time without giving a reason. "+
+	"In order to do so, simply close the browser window.</dd>"+
+	"<dt style='font-size: 105%;line-height: 2;'>Possible disadvantages or risks</dt><dd>There are no disadvantages or risks known to be related to this study.</dd>"+
+	"<dt style='font-size: 105%;line-height: 2;'>Confidentiality and anonymity</dt><dd>Your anonymity is assured at all times. "+
+	"We do not collect data that could be used to identify you. The collected data can - in encrypted form only - be made available for other researchers.</dd></dl>"+
+	"<p style='font-size: 90%'>If you have further questions please contact: <br> Dr. Henrik Singmann, University of Zurich (singmann@psychologie.uzh.ch) or <br> Danielle Pessach, University of Zurich (danielle.pessach@uzh.ch)</p>"]	
+}
+timeline.push(study_info);	
+
+
+  var check_consent = function(elem) {
+    if ($('#consent_checkbox1').is(':checked') && $('#consent_checkbox2').is(':checked') && $('#consent_checkbox3').is(':checked')) {
+      return true;
+    } else {
+      alert("If you want to participate you must check all the boxes.");
+      return false;
+    }
+    return false;
+  };
+  
+   var consent_block = {
+    "type": "html",
+    "force_refresh": true,
+    "url": "consent.html",
+    "cont_btn": "start",
+    "check_fn": check_consent
+  }
+timeline.push(consent_block);
+ 
+
+
+//*****************************************************//////////////////*****************************************************
+//*****************************************************// Instuctons:  //*****************************************************
+//*****************************************************//////////////////*****************************************************
+
+
+var instr1 = {
+	type: 'instructions',
+	show_clickable_nav: true,
+	pages: [getPar(texts.instructions,'margin-top:50px;')]
+}
+timeline.push(instr1);
+
+//*****************************************************//////////////////*****************************************************
+//*****************************************************// Probetrials: //*****************************************************
+//*****************************************************//////////////////*****************************************************
+	var b1 = {
+		type: 'single-stim-wl',
+		timing_response: 2000,
+		choices: [37, 39],
+		timing_stim: 1500,
+		response_ends_trial: true,
+		timing_post_trial: ITI[0],
+		timeline: breg1
+	}
+	timeline.push(cross, b1);
+
+var Intro2 = {
+	type: 'text',
+	cont_key: 'mouse',
+	text: '<h4 style="margin-top:200px">Next follow the six test-trials.</h4>' +
+	'<p>Reminder:<ul><li>If the object is <strong>smaller</strong> than a soccer ball, please press the'+
+	'<strong>left</strong> arrow key;</li><li>if the object is <strong>larger</strong> than'+
+	'a soccer ball, please press the <strong>right</strong> arrow key.</li>'+
+	'<p style="line-height: 3">Press "Continue" to start the trials.</p>'+
+	'<div class="jspsych-instructions-nav"><button id="jspsych-instructions-next" class="jspsych-btn">Continue &gt;</button></div>'
+}
+timeline.push(Intro2);
+
+
+
+
+//*****************************************************//////////////////*****************************************************
+//*****************************************************//   Trials:    //*****************************************************
+//*****************************************************//////////////////*****************************************************
+var inter = {
+	type: 'text',
+	cont_key: [32],
+	text: '<p style="line-height: 1; margin-top:200px;text-align: center">Press the spacebar to start the next trial.</p>'
+}
+
+var interLast = {
+	type: 'text',
+	cont_key: [32],
+	text: '<p style="line-height: 1; margin-top:200px;text-align: center">Press the spacebar to start the last trial.</p>'
+}
+
+	
+	var b2 = {
+		type: 'single-stim-wl',
+		timing_response: 2000,
+		choices: [37, 39],
+		timing_stim: 1500,
+		response_ends_trial: true,
+		timing_post_trial: ITI[1],
+		timeline: breg2
+	}
+	timeline.push(cross, b2, inter);
+	
+	var b3 = {
+		type: 'single-stim-wl',
+		timing_response: 2000,
+		choices: [37, 39],
+		timing_stim: 1500,
+		response_ends_trial: true,
+		timing_post_trial: ITI[2],
+		timeline: breg3
+	}
+	timeline.push(cross, b3, inter);
+	
+	var b4 = {
+		type: 'single-stim-wl',
+		timing_response: 2000,
+		choices: [37, 39],
+		timing_stim: 1500,
+		response_ends_trial: true,
+		timing_post_trial: ITI[3],
+		timeline: breg4
+	}
+	timeline.push(cross, b4, inter);
+
+	var b5 = {
+		type: 'single-stim-wl',
+		timing_response: 2000,
+		choices: [37, 39],
+		timing_stim: 1500,
+		response_ends_trial: true,
+		timing_post_trial: ITI[4],
+		timeline: breg5
+	}
+	timeline.push(cross, b5, inter);
+
+	var b6 = {
+		type: 'single-stim-wl',
+		timing_response: 2000,
+		choices: [37, 39],
+		timing_stim: 1500,
+		response_ends_trial: true,
+		timing_post_trial: ITI[5],
+		timeline: blast
+	}
+	timeline.push(cross, b6, interLast);
+	
+	var b7 = {
+		type: 'single-stim-wl',
+		timing_response: 2000,
+		choices: [37, 39],
+		timing_stim: 1500,
+		response_ends_trial: true,
+		timing_post_trial: ITI[6],
+		timeline: btest
+	}
+	timeline.push(cross, b7);
+	
+	var response_table = {
+        type : 'response-table',
+        header: "<p style='font-weight:bold;text-align:center;margin-top:100px;'>"+texts.instruction_table+"</p>",
+        words : btable,
+		obj: tableItems,
+		test_order: getWordsOnly(test),
+        rows : 3,
+        cols : 6,
+        tdStyle : "height:80px;width:150px;font-size:25px;padding:15px;text-align:center;",
+        tableStyle: "position:relative;margin: 0 auto; top:"+(centerY-350).toString()+"px;"
+      }
+	  timeline.push(response_table);
+	  
+	  
+	  
+	  
+	  
+//************************************** Demographics and save ***********************************************//
+
+
+  var end_fullscreen = {
+          type: 'fullscreen',
+          showtext: getPar(texts.end_fullscreen,'margin-top:150px;'),
+          buttonStyle : 'float:right;',
+          buttontext: "Continue to questionnaire",
+          exit: true
+      }
+timeline.push(end_fullscreen);
+
+
+
+var q1 = [
+	"Age:",
+	"Gender:", 
+	"Current status:", 
+	"Highest educational qualification:"];
+var q2 =["Is English your native language?",
+	"If not, for how many years have you been speaking English? (Answer only if English is NOT your native tongue)",
+	"Following you find a list of hobbies. If you're reading these instructions, please type 'I read the instruction' in the 'other' field",
+	"",
+	"Have you done the experiment seriously? (The answer to this question has no effect on your payment but is for us to know whether we can include your data in the analysis, so please be truthful)"];
+var q3 = ["Other remarks and or suggestions:"];
+var opt1 = ["male", "female", "other/no answer"];
+var opt2 = ["professional", "student", "looking for work", "other"];
+var opt3 = ["PhD or Masters degree", "Bachelors degree or College", "High school", "No degree (yet)"];
+var opt4 = ["Yes", "No"]
+var opt5 = ["Reading", "Movies", "Sport", "Going out with friends", "Golfing", "Music", "Other:"];
+var opt6 = ["Yes (my data can be used)", "No (my data should not be used)"];
+
+var survey_p1 = {
+	type: 'survey',
+	questions: q1,
+	options: ["0", opt1, opt2, opt3],
+	required: [true, true, true, true]
+};
+timeline.push(survey_p1);
+
+var survey_p2 = {
+	type: 'survey',
+	questions: q2,
+	options: [opt4, "0", opt5, "0", opt6],
+	required: [true, false, true, false, true]
+};
+timeline.push(survey_p2);
+
+var survey_p3 = {
+	type: 'survey-text',
+	questions: q3,
+	rows: [5],
+	columns: [90],
+	preamble: getPar(texts.save),
+	on_finish: function(data){
+				var csvString = jsPsych.data.dataAsCSV();
+				var jsonString = jsPsych.data.dataAsJSON();
+				saveData(vp_ID, csvString, jsonString)
+			}	
+};
+timeline.push(survey_p3);
+
+    
+ var debriefing_block = {
+        type: 'text',
+        text: getPar(texts.debriefing,'margin-top:100px'),
+        cont_key: [39]
+      };
+timeline.push(debriefing_block);
+
+function saveData(subjectID, CSV, JSON){
+       $.ajax({
+          type: 'post',
+          cache: false,
+          url: '../store.php', 
+          data: {subjectID: vp_ID, folder: "cr_wm", csvStrings: CSV, dataAsJSON: JSON}
+       });
+      }
+	  
+var csvString = jsPsych.data.dataAsCSV();
+ 	  
+/* */
+  jsPsych.init({
+    display_element: $('#jspsych-target'),
+    timeline: timeline,
+	on_finish: function() {
+        jsPsych.data.displayData();
+      },
+	default_iti: 100
+  });
+  </script>
+</html>
