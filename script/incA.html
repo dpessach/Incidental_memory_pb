@@ -4,10 +4,10 @@
 	<title>Experiment Universit&aumlt Z&uumlrich </title>
 		<script src="js/jquery.min.js"></script>
 		<script src="js/jquery-ui.min.js"></script>
-		<script src="js/snap.svg-min.js"></script>
 		<script src="../jspsych_new.js"></script>
 		<script src="../plugins/jspsych-single-stim.js"></script>
 		<script src="../plugins/jspsych-single-stim-wl.js"></script>
+		<script src="../plugins/jspsych-single-stim-wl-rep.js"></script>
 		<script src="../plugins/jspsych-instructions.js"></script>
 		<script src="../plugins/jspsych-html.js"></script>
 		<script src="../plugins/jspsych-text_adapted.js"></script>
@@ -25,7 +25,7 @@
 	<div id="demo"></div>
   </body>
   <script>
-  
+ 
 ///Settings & basics:
 
 var timeline = [];
@@ -36,9 +36,9 @@ var timeline = [];
   var Datum = date.toUTCString();
 
   var screen_width = screen.width;
-      var screen_height = screen.height;
-      var centerX = screen_width*0.5
-      var centerY = screen_height*0.5
+  var screen_height = screen.height;
+  var centerX = screen_width*0.5
+  var centerY = screen_height*0.5
      
 	 var errStyle = "color:red;margin-top:200px;text-align:center;font-weight:bold;";
 
@@ -93,8 +93,8 @@ function getCrossTable(linelength){
 
 // Create word storages:
 
-var nBlocks = 7;
-var nItems = nBlocks*6 + 6;
+var nBlocks = 19;	//1 Test, 6 real, 12 Backup
+var nItems = nBlocks*6 + 6; //   + 6 NPL (= ttl 120 of the 180 selected)
 
 
 function createItemStorage(){
@@ -102,7 +102,7 @@ function createItemStorage(){
 		 y = jsPsych.randomization.sample(wordItems, nItems)
 		 v = jsPsych.randomization.repeat(y, 1)
         for (i=0; i < nBlocks+1; i++){
-          x= y.splice(0, 6)
+          x= v.splice(0, 6)
           t.push(x)
         }
         return t
@@ -110,6 +110,9 @@ function createItemStorage(){
 
 var items = createItemStorage();
 	
+	var blockIdx = 0;
+	var repidx = 0;
+
      var reg1 = items[0];
 	 var reg2 = items[1];
 	 var reg3 = items[2];
@@ -133,19 +136,55 @@ var items = createItemStorage();
 
 var ITIs = [100, 100, 5000, 5000, 2000];
 ITI = jsPsych.randomization.repeat(ITIs, 1);
-ITI.push(2000, 5000);    		// for Version B that would be (2000, 100)
+ITI.push(2000, 100);    		// for Version B that would be (2000, 5000)
 
 function getWords(arr){
 	var allWords = [];
 	for (i=0; i<arr.length; i++){
+	if (i===5){
+		var s = {stimulus: "<p>" + arr[i].text + "</p>",
+				 size: arr[i].size_difference,
+				 wordID: arr[i].word_id,
+				 on_finish: function(){
+					blockIdx += 1;
+					}
+				};
+		allWords.push(s);
+	} else {
 		var s = {stimulus: "<p>" + arr[i].text + "</p>",
 				 size: arr[i].size_difference,
 				 wordID: arr[i].word_id
 				};
 		allWords.push(s);
+	}}
+	return allWords;
+}
+
+function getStim(arr){
+	var allWords = [];
+	for (i=0; i<arr.length; i++){
+		var s = "<p>" + arr[i].text + "</p>";
+		allWords.push(s);
 	}
 	return allWords;
 }
+function getSize(arr){
+	var allWords = [];
+	for (i=0; i<arr.length; i++){
+		var s = arr[i].size_difference;
+		allWords.push(s);
+	}
+	return allWords;
+}
+function getWordId(arr){
+	var allWords = [];
+	for (i=0; i<arr.length; i++){
+		var s = arr[i].word_id;
+		allWords.push(s);
+	}
+	return allWords;
+}
+
 
 function getWordsOnly(arr){
 	var allWords = [];
@@ -164,7 +203,6 @@ var breg5= getWords(reg5);
 var blast= getWords(last);
 var btest= getWords(test);
 var btable = getWordsOnly(tableItems);
-//document.getElementById("demo").innerHTML = ITI.toString();
 
 
 //*****************************************************//////////////////*****************************************************
@@ -250,10 +288,223 @@ var instr1 = {
 }
 timeline.push(instr1);
 
+var inter = {
+	type: 'text',
+	cont_key: [32],
+	text: '<h3 style="line-height: 1; margin-top:200px;text-align: center">Press the spacebar to start the next trial.</h3>'
+}
+
+
+//////////// check if repetition needed: //////////////
+
+var infoRepeat = {
+	type: 'text',
+	cont_key: [39],
+	text: '<p><br><br><br>You made 3 or more errors when judging the size. This trial will be repeated.</p><p>Reminder:<ul><li>If the object is <strong>smaller</strong> than a soccer ball, please press the <strong>left</strong> arrow key;</li><li>if the object is <strong>larger</strong> than a soccer ball, please press the <strong>right</strong> arrow key.</li></ul><p>Please press the right arrow to continue.</p>'
+}
+
+
+function moreThanThreeWrong(){
+	var dats = jsPsych.data.getTrialsOfType('single-stim-wl');
+	var d = dats.splice(-6);
+	var numwrong = 0;
+	for(i=0;i<6;i++){
+		if(d[i].correct === "FALSE"){numwrong +=1}
+	}
+	if (numwrong >= 3){
+		repidx++;
+		return true;
+	}else{
+	  return false;
+	}
+}
+
+
+function moreThanThreeWrongRep(){
+	var dats = jsPsych.data.getTrialsOfType('single-stim-wl-rep');
+	var d = dats.splice(-6);
+	var numwrong = 0;
+	for(i=0;i<6;i++){
+		if(d[i].correct === "FALSE"){numwrong +=1}
+	}
+	if (numwrong >= 3){
+		repidx++;
+		return true;
+	}else{
+	  return false;
+	}
+}
+
+var rep1 = {
+	type: 'single-stim-wl-rep',
+	timing_response: 2000,
+	choices: [37, 39],
+	timing_stim: 1500,
+	response_ends_trial: true,
+	timing_post_trial: function(){
+		return ITI[blockIdx-1];
+	},
+	stimulus: function(){
+		var bu = items[repidx+8];
+		var brep = getStim(bu);
+		return brep[1];	
+		},
+	size: function(){
+		var bu = items[repidx+8];
+		var brep = getSize(bu);
+		return brep[1];	
+		},
+	wordID: function(){
+		var bu = items[repidx+8];
+		var brep = getWordId(bu);
+		return brep[1];	
+		}
+}
+var rep2 = {
+	type: 'single-stim-wl-rep',
+	timing_response: 2000,
+	choices: [37, 39],
+	timing_stim: 1500,
+	response_ends_trial: true,
+	timing_post_trial: function(){
+		return ITI[blockIdx-1];
+	},
+	stimulus: function(){
+		var bu = items[repidx+8];
+		var brep = getStim(bu);
+		return brep[2];	
+		},
+	size: function(){
+		var bu = items[repidx+8];
+		var brep = getSize(bu);
+		return brep[2];	
+		},
+	wordID: function(){
+		var bu = items[repidx+8];
+		var brep = getWordId(bu);
+		return brep[2];	
+		}
+}
+var rep3 = {
+	type: 'single-stim-wl-rep',
+	timing_response: 2000,
+	choices: [37, 39],
+	timing_stim: 1500,
+	response_ends_trial: true,
+	timing_post_trial: function(){
+		return ITI[blockIdx-1];
+	},
+	stimulus: function(){
+		var bu = items[repidx+8];
+		var brep = getStim(bu);
+		return brep[3];	
+		},
+	size: function(){
+		var bu = items[repidx+8];
+		var brep = getSize(bu);
+		return brep[3];	
+		},
+	wordID: function(){
+		var bu = items[repidx+8];
+		var brep = getWordId(bu);
+		return brep[3];	
+		}
+}
+var rep4 = {
+	type: 'single-stim-wl-rep',
+	timing_response: 2000,
+	choices: [37, 39],
+	timing_stim: 1500,
+	response_ends_trial: true,
+	timing_post_trial: function(){
+		return ITI[blockIdx-1];
+	},
+	stimulus: function(){
+		var bu = items[repidx+8];
+		var brep = getStim(bu);
+		return brep[4];	
+		},
+	size: function(){
+		var bu = items[repidx+8];
+		var brep = getSize(bu);
+		return brep[4];	
+		},
+	wordID: function(){
+		var bu = items[repidx+8];
+		var brep = getWordId(bu);
+		return brep[4];	
+		}
+}
+var rep5 = {
+	type: 'single-stim-wl-rep',
+	timing_response: 2000,
+	choices: [37, 39],
+	timing_stim: 1500,
+	response_ends_trial: true,
+	timing_post_trial: function(){
+		return ITI[blockIdx-1];
+	},
+	stimulus: function(){
+		var bu = items[repidx+8];
+		var brep = getStim(bu);
+		return brep[5];	
+		},
+	size: function(){
+		var bu = items[repidx+8];
+		var brep = getSize(bu);
+		return brep[5];	
+		},
+	wordID: function(){
+		var bu = items[repidx+8];
+		var brep = getWordId(bu);
+		return brep[5];	
+		}
+}
+var rep6 = {
+	type: 'single-stim-wl-rep',
+	timing_response: 2000,
+	choices: [37, 39],
+	timing_stim: 1500,
+	response_ends_trial: true,
+	timing_post_trial: function(){
+		return ITI[blockIdx-1];
+	},
+	stimulus: function(){
+		var bu = items[repidx+8];
+		var brep = getStim(bu);
+		return brep[6];	
+		},
+	size: function(){
+		var bu = items[repidx+8];
+		var brep = getSize(bu);
+		return brep[6];	
+		},
+	wordID: function(){
+		var bu = items[repidx+8];
+		var brep = getWordId(bu);
+		return brep[6];	
+		}
+}
+
+var repLoop ={
+	timeline: [infoRepeat, rep1, rep2, rep3, rep4, rep5, rep6],
+	loop_function: function(){
+		 return (moreThanThreeWrongRep())
+	}
+}
+
+
+var testrepeat = {
+	timeline: [repLoop],
+	conditional_function: function(){
+		 return (moreThanThreeWrong())
+		}
+	}
+	
 //*****************************************************//////////////////*****************************************************
 //*****************************************************// Probetrials: //*****************************************************
 //*****************************************************//////////////////*****************************************************
-	var b1 = {
+var b1 = {
 		type: 'single-stim-wl',
 		timing_response: 2000,
 		choices: [37, 39],
@@ -262,14 +513,14 @@ timeline.push(instr1);
 		timing_post_trial: ITI[0],
 		timeline: breg1
 	}
-	timeline.push(cross, b1);
+	timeline.push(cross, b1, testrepeat);
 
 var Intro2 = {
 	type: 'text',
 	cont_key: 'mouse',
 	text: '<h4 style="margin-top:200px">Next follow the six test-trials.</h4>' +
 	'<p>Reminder:<ul><li>If the object is <strong>smaller</strong> than a soccer ball, please press the'+
-	'<strong>left</strong> arrow key;</li><li>if the object is <strong>larger</strong> than'+
+	'<strong> left</strong> arrow key;</li><li>if the object is <strong>larger</strong> than'+
 	'a soccer ball, please press the <strong>right</strong> arrow key.</li>'+
 	'<p style="line-height: 3">Press "Continue" to start the trials.</p>'+
 	'<div class="jspsych-instructions-nav"><button id="jspsych-instructions-next" class="jspsych-btn">Continue &gt;</button></div>'
@@ -282,18 +533,6 @@ timeline.push(Intro2);
 //*****************************************************//////////////////*****************************************************
 //*****************************************************//   Trials:    //*****************************************************
 //*****************************************************//////////////////*****************************************************
-var inter = {
-	type: 'text',
-	cont_key: [32],
-	text: '<p style="line-height: 1; margin-top:200px;text-align: center">Press the spacebar to start the next trial.</p>'
-}
-
-var interLast = {
-	type: 'text',
-	cont_key: [32],
-	text: '<p style="line-height: 1; margin-top:200px;text-align: center">Press the spacebar to start the last trial.</p>'
-}
-
 	
 	var b2 = {
 		type: 'single-stim-wl',
@@ -304,7 +543,7 @@ var interLast = {
 		timing_post_trial: ITI[1],
 		timeline: breg2
 	}
-	timeline.push(cross, b2, inter);
+	timeline.push(cross, b2, testrepeat, inter);
 	
 	var b3 = {
 		type: 'single-stim-wl',
@@ -315,7 +554,7 @@ var interLast = {
 		timing_post_trial: ITI[2],
 		timeline: breg3
 	}
-	timeline.push(cross, b3, inter);
+	timeline.push(cross, b3, testrepeat, inter);
 	
 	var b4 = {
 		type: 'single-stim-wl',
@@ -326,7 +565,7 @@ var interLast = {
 		timing_post_trial: ITI[3],
 		timeline: breg4
 	}
-	timeline.push(cross, b4, inter);
+	timeline.push(cross, b4, testrepeat, inter);
 
 	var b5 = {
 		type: 'single-stim-wl',
@@ -337,7 +576,7 @@ var interLast = {
 		timing_post_trial: ITI[4],
 		timeline: breg5
 	}
-	timeline.push(cross, b5, inter);
+	timeline.push(cross, b5, testrepeat, inter);
 
 	var b6 = {
 		type: 'single-stim-wl',
@@ -348,7 +587,7 @@ var interLast = {
 		timing_post_trial: ITI[5],
 		timeline: blast
 	}
-	timeline.push(cross, b6, interLast);
+	timeline.push(cross, b6, testrepeat, inter);
 	
 	var b7 = {
 		type: 'single-stim-wl',
@@ -360,6 +599,7 @@ var interLast = {
 		timeline: btest
 	}
 	timeline.push(cross, b7);
+	
 	
 	var response_table = {
         type : 'response-table',
@@ -373,8 +613,6 @@ var interLast = {
         tableStyle: "position:relative;margin: 0 auto; top:"+(centerY-350).toString()+"px;"
       }
 	  timeline.push(response_table);
-	  
-	  
 	  
 	  
 	  
@@ -440,11 +678,11 @@ var survey_p3 = {
 };
 timeline.push(survey_p3);
 
-    
+ 
  var debriefing_block = {
         type: 'text',
         text: getPar(texts.debriefing,'margin-top:100px'),
-        cont_key: [39]
+        cont_key: [43] // plus (+) in case anyone should want to know..
       };
 timeline.push(debriefing_block);
 
@@ -453,19 +691,16 @@ function saveData(subjectID, CSV, JSON){
           type: 'post',
           cache: false,
           url: '../store.php', 
-          data: {subjectID: vp_ID, folder: "cr_wm", csvStrings: CSV, dataAsJSON: JSON}
+          data: {subjectID: vp_ID, folder: "IncMem", csvStrings: CSV, dataAsJSON: JSON}
        });
       }
 	  
 var csvString = jsPsych.data.dataAsCSV();
  	  
-/* */
+
   jsPsych.init({
     display_element: $('#jspsych-target'),
     timeline: timeline,
-	on_finish: function() {
-        jsPsych.data.displayData();
-      },
 	default_iti: 100
   });
   </script>

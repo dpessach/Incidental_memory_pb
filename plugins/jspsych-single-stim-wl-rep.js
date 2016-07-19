@@ -11,7 +11,7 @@
  **/
 
 
-jsPsych.plugins["single-stim-wl"] = (function() {
+jsPsych.plugins["single-stim-wl-rep"] = (function() {
 
   var plugin = {};
 

@@ -8,13 +8,12 @@ texts.warning = '<h2>Welcome</h2><p>To run this experiment we need launch into f
 
 texts.instructions = '<br><h2 style="text-align: center">Instructions</h2><p style="text-align: center">Thank you for \
 						taking part in our experiment! <br>\
-					  <p><br>In each trial you will see six words presented sequentially. All words \
+					  <p><br>In each run you will see six words presented sequentially. All words \
                       refer to concrete objects. Your task is to judge for each word \
                       whether the object it refers to is larger or smaller than a soccer ball:<ul><li>If the object is \
                       <strong>smaller</strong> than a soccer ball, please press the <strong>left</strong> arrow key.</li>\
                       <li>If the object is <strong>larger</strong> than a soccer ball, please press the \
-                      <strong>right</strong> arrow key.</li></ul><br><p>Please try to make your judgement as quick and as accurate as possible. You will first do one practice trial, followed by six serious trials. The time \
-					  between the presentation of two words will be different for each trial.</p>\
+                      <strong>right</strong> arrow key.</li></ul><br><p>The trials will be organized into short runs. The time between successive trials will vary from one run to another. You will first do one practice run, followed by six serious runs.</p><p>Please try to make your judgement as quick and as accurate as possible. If you have three or more errors in one run, you will have to repeat it.</p>\
                       <p>Please click on "next" to continue to the practice tral.</p>'
 
 texts.reminder = '<p>When you are ready for the practice trial, please press the right arrow key. If you \
@@ -30,10 +29,10 @@ texts.feedback_bad_size_judgement = '<p>You made more than 3 errors when judging
                                      <p>Reminder:<ul>\
                                      <li>If the object is <strong>smaller</strong> than a soccer ball, please press the \
                                      <strong>left</strong> arrow key;</li><li>if the object is <strong>larger</strong> than\
-                                     a soccer ball, please press the <strong>right</strong> arrow key.</li><li>Also, remember \
-                                     all the <strong>red words</strong> in their <strong>order of presentation</strong>.</li></ul>\
+                                     a soccer ball, please press the <strong>right</strong> arrow key.</li></ul>\
                                      <p>Please press the right arrow to continue.</p>'
-texts.instruction_table = 'Now, please select the <strong>last six words</strong> in the order of their presentation. <p>You can select the words by clicking on them with the mouse. If you do not remember all words, you can guess, but take care to select the words you do remember in their right order! If, for example, you remember the only the last word, first guess the other five and then select that one last.'
+									 
+texts.instruction_table = '<h3 style="text-align: center">Now, please remember the <strong>last six words</strong> in the order of their presentation.</h3> <p style="text-align: center">Select the words by clicking on them with the mouse.'
 
 
 texts.fullscreen_exit = 'You were not supposed to end fullscreen mode. <br>The session was terminated.'
@@ -62,5 +61,5 @@ texts.debriefing = '<p><h2>Thank you again for participating in our experiment.<
                    100 ms or 5000 ms after each word. We expect that participants who had more \
                    time following the words are able to remember them better.</p><p>Please do not share \
                    this information with anyone! It is crucial the explanation is kept confidential until we \
-                   have collected all data.</p><p>Here is your code to confirm your participation: 1.IncMem_73</p>\
+                   have collected all data.</p><p>Here is your code to confirm your participation: IncMem_73_1</p>\
                    <p>You can now close the browser window/tab after copying the confirmation code.</p>'

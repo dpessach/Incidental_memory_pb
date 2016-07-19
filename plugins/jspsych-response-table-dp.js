@@ -42,18 +42,7 @@ jsPsych.plugins['response-table'] = (function() {
      response_table = response_table.concat("</table>");
 
 	
- /*	 function getOrder(arr){
-		 var t = [];
-			for (i=0; i<arr.length; i++){
-				x= arr[i];
-				y = test_order.indexOf(x);	
-				t.push(y);
-			};
-		return JSON.stringify(t);
-		}; 
 
-	
-		*/
      // prepare end function
      var endTrial = function(){
 
