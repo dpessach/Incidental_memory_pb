@@ -4,7 +4,7 @@ texts.warning = '<h2>Welcome</h2><p>To run this experiment we need launch into f
                 <li>reloading the webpage</li><li>going-"back" in the browser</li></ul>\
                 <p>Please close all other running applications and turn off all notifications.</p><p>Ensure you\
                 are in a calm place without any distractions, for example, noise.<p>\
-                <p>Click on the button below to launch into fullscreen and start the experiment.'
+                <p>Click on the button below to launch into fullscreen and start the experiment.</p>'
 
 texts.instructions = '<br><h2 style="text-align: center">Instructions</h2><p style="text-align: center">Thank you for \
 						taking part in our experiment! <br>\

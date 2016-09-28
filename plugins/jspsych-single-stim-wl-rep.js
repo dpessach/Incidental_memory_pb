@@ -42,7 +42,7 @@ jsPsych.plugins["single-stim-wl-rep"] = (function() {
       display_element.append($('<div>', {
         html: trial.stimulus,
         id: 'jspsych-single-stim-wl-stimulus',
-		style: "position:relative;top:"+(centerY-25).toString()+"px;text-align:center;"+
+		style: "position:relative;top:"+(centerY-50).toString()+"px;text-align:center;"+
                           "font-weight:bold;font-size:100px;",
       }));
 

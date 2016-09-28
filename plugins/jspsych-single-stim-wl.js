@@ -15,7 +15,7 @@ jsPsych.plugins["single-stim-wl"] = (function() {
 
   var plugin = {};
 
-  jsPsych.pluginAPI.registerPreload('single-stim-wl-wl', 'stimulus', 'image');
+  jsPsych.pluginAPI.registerPreload('single-stim-wl', 'stimulus', 'image');
 
   plugin.trial = function(display_element, trial) {
 
@@ -35,14 +35,12 @@ jsPsych.plugins["single-stim-wl"] = (function() {
     // this array holds handlers from setTimeout calls
     // that need to be cleared if the trial ends early
     var setTimeoutHandlers = [];
-	//$('*').css('cursor', 'none');
-	//$('*').css('cursor', '');
-
+	
     // display stimulus
       display_element.append($('<div>', {
         html: trial.stimulus,
         id: 'jspsych-single-stim-wl-stimulus',
-		style: "position:relative;top:"+(centerY-25).toString()+"px;text-align:center;"+
+		style: "position:relative;top:"+(centerY-50).toString()+"px;text-align:center;"+
                           "font-weight:bold;font-size:100px;",
       }));
 
@@ -93,7 +91,6 @@ jsPsych.plugins["single-stim-wl"] = (function() {
 
       // clear the display
       display_element.html('');
-		//$('*').css('cursor', '');
       // move on to the next trial
       jsPsych.finishTrial(trial_data);
     };

@@ -26,6 +26,7 @@ jsPsych.plugins['response-table'] = (function() {
 //  prepare html table
      trial = jsPsych.pluginAPI.evaluateFunctionParameters(trial);
      //$('*').css('cursor', 'none');
+	 document.body.style.cursor = '';
      
 
      var response_table = "<table id='response_table' style='"+tableStyle+"'>";

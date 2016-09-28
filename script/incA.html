@@ -20,13 +20,24 @@
 		<link rel="stylesheet" href="css/jquery-ui.css"></link>
 		<link rel="stylesheet" href="../css/jspsych.css" type="text/css"></link>
   </head>
+  <style>
+	html {
+	height: 100%;
+	}
+	body {
+	min-height: 85%;
+	}
+</style>
   <body>
     <div id="jspsych-target"></div>
-	<div id="demo"></div>
   </body>
   <script>
  
+ 
 ///Settings & basics:
+
+
+//document.getElementById('c1').style.cursor = 'none';
 
 var timeline = [];
 
@@ -252,7 +263,7 @@ var study_info = {
 	"We do not collect data that could be used to identify you. The collected data can - in encrypted form only - be made available for other researchers.</dd></dl>"+
 	"<p style='font-size: 90%'>If you have further questions please contact: <br> Dr. Henrik Singmann, University of Zurich (singmann@psychologie.uzh.ch) or <br> Danielle Pessach, University of Zurich (danielle.pessach@uzh.ch)</p>"]	
 }
-timeline.push(study_info);	
+//timeline.push(study_info);	
 
 
   var check_consent = function(elem) {
@@ -272,7 +283,7 @@ timeline.push(study_info);
     "cont_btn": "start",
     "check_fn": check_consent
   }
-timeline.push(consent_block);
+//timeline.push(consent_block);
  
 
 
@@ -284,6 +295,7 @@ timeline.push(consent_block);
 var instr1 = {
 	type: 'instructions',
 	show_clickable_nav: true,
+	on_finish: function(){document.body.style.cursor = 'none';},
 	pages: [getPar(texts.instructions,'margin-top:50px;')]
 }
 timeline.push(instr1);
@@ -291,7 +303,7 @@ timeline.push(instr1);
 var inter = {
 	type: 'text',
 	cont_key: [32],
-	text: '<h3 style="line-height: 1; margin-top:200px;text-align: center">Press the spacebar to start the next trial.</h3>'
+	text: '<h3 style="line-height: 1; margin-top:200px;text-align: center">Please press the spacebar to start the next trial.</h3>'
 }
 
 
@@ -299,8 +311,8 @@ var inter = {
 
 var infoRepeat = {
 	type: 'text',
-	cont_key: [39],
-	text: '<p><br><br><br>You made 3 or more errors when judging the size. This trial will be repeated.</p><p>Reminder:<ul><li>If the object is <strong>smaller</strong> than a soccer ball, please press the <strong>left</strong> arrow key;</li><li>if the object is <strong>larger</strong> than a soccer ball, please press the <strong>right</strong> arrow key.</li></ul><p>Please press the right arrow to continue.</p>'
+	cont_key: [32],
+	text: '<p><br><br><br>You made 3 or more errors when judging the size. This trial will be repeated.</p><p>Reminder:<ul><li>If the object is <strong>smaller</strong> than a soccer ball, please press the <strong>left</strong> arrow key;</li><li>if the object is <strong>larger</strong> than a soccer ball, please press the <strong>right</strong> arrow key.</li></ul><p>Please press the spacebar to continue.</p>'
 }
 
 
@@ -487,7 +499,7 @@ var rep6 = {
 }
 
 var repLoop ={
-	timeline: [infoRepeat, rep1, rep2, rep3, rep4, rep5, rep6],
+	timeline: [infoRepeat, cross, rep1, rep2, rep3, rep4, rep5, rep6],
 	loop_function: function(){
 		 return (moreThanThreeWrongRep())
 	}
@@ -517,13 +529,12 @@ var b1 = {
 
 var Intro2 = {
 	type: 'text',
-	cont_key: 'mouse',
+	cont_key: [32],
 	text: '<h4 style="margin-top:200px">Next follow the six test-trials.</h4>' +
-	'<p>Reminder:<ul><li>If the object is <strong>smaller</strong> than a soccer ball, please press the'+
-	'<strong> left</strong> arrow key;</li><li>if the object is <strong>larger</strong> than'+
+	'<p>Reminder:<ul><li>If the object is <strong>smaller</strong> than a soccer ball, please press the '+
+	'<strong>left</strong> arrow key;</li><li>if the object is <strong>larger</strong> than '+
 	'a soccer ball, please press the <strong>right</strong> arrow key.</li>'+
-	'<p style="line-height: 3">Press "Continue" to start the trials.</p>'+
-	'<div class="jspsych-instructions-nav"><button id="jspsych-instructions-next" class="jspsych-btn">Continue &gt;</button></div>'
+	'<p style="line-height: 3">Press the spacebar to start the trials.</p>'
 }
 timeline.push(Intro2);
 
@@ -543,7 +554,7 @@ timeline.push(Intro2);
 		timing_post_trial: ITI[1],
 		timeline: breg2
 	}
-	timeline.push(cross, b2, testrepeat, inter);
+	//timeline.push(cross, b2, testrepeat, inter);
 	
 	var b3 = {
 		type: 'single-stim-wl',
@@ -554,7 +565,7 @@ timeline.push(Intro2);
 		timing_post_trial: ITI[2],
 		timeline: breg3
 	}
-	timeline.push(cross, b3, testrepeat, inter);
+	//timeline.push(cross, b3, testrepeat, inter);
 	
 	var b4 = {
 		type: 'single-stim-wl',
@@ -565,7 +576,7 @@ timeline.push(Intro2);
 		timing_post_trial: ITI[3],
 		timeline: breg4
 	}
-	timeline.push(cross, b4, testrepeat, inter);
+	//timeline.push(cross, b4, testrepeat, inter);
 
 	var b5 = {
 		type: 'single-stim-wl',
@@ -576,7 +587,7 @@ timeline.push(Intro2);
 		timing_post_trial: ITI[4],
 		timeline: breg5
 	}
-	timeline.push(cross, b5, testrepeat, inter);
+	//timeline.push(cross, b5, testrepeat, inter);
 
 	var b6 = {
 		type: 'single-stim-wl',
@@ -587,7 +598,7 @@ timeline.push(Intro2);
 		timing_post_trial: ITI[5],
 		timeline: blast
 	}
-	timeline.push(cross, b6, testrepeat, inter);
+	//timeline.push(cross, b6, testrepeat, inter);
 	
 	var b7 = {
 		type: 'single-stim-wl',
