@@ -40,8 +40,8 @@ jsPsych.plugins["single-stim-wl"] = (function() {
       display_element.append($('<div>', {
         html: trial.stimulus,
         id: 'jspsych-single-stim-wl-stimulus',
-		style: "position:relative;top:"+(centerY-50).toString()+"px;text-align:center;"+
-                          "font-weight:bold;font-size:100px;",
+		style: "position:fixed;top: 50%; left: 50%; text-align:center;"+
+               "transform: translate(-50%, -50%);font-weight:bold;font-size:100px;",
       }));
 
     //show prompt if there is one

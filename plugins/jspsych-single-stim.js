@@ -38,12 +38,16 @@ jsPsych.plugins["single-stim"] = (function() {
     if (!trial.is_html) {
       display_element.append($('<img>', {
         src: trial.stimulus,
-        id: 'jspsych-single-stim-stimulus'
+        id: 'jspsych-single-stim-stimulus',
+		style: "position:fixed;top: 50%; left: 50%; text-align:center;"+
+               "transform: translate(-50%, -50%);font-size:100px;",
       }));
     } else {
       display_element.append($('<div>', {
         html: trial.stimulus,
-        id: 'jspsych-single-stim-stimulus'
+        id: 'jspsych-single-stim-stimulus',
+		style: "position:fixed;top: 50%; left: 50%; text-align:center;"+
+               "transform: translate(-50%, -50%);font-weight:100;font-size:200px;",
       }));
     }
 

@@ -69,8 +69,11 @@ jsPsych.data.addProperties({
 	
 	
 // Fixation cross:
-function getCrossTable(linelength){
-            var table = "<table style='margin:0 auto;border-collapse:collapse;position:relative;top:"+(screen.height*.5-linelength).toString()+"px;'>"
+
+
+function getCrossTable1(linelength){
+            var table = "<table style='margin:0 auto;border-collapse:collapse;position:fixed;top: 50%; left: 50%;"+
+			"transform: translate(-50%, -50%)>"
             var tdStyles =
                 ["height:"+linelength+"px;width:"+linelength+"px;border-right:4px solid black;border-bottom:4px solid black;",
                  "height:"+linelength+"px;width:"+linelength+"px;border-left:4px solid black;border-bottom:4px solid black;",
@@ -88,9 +91,13 @@ function getCrossTable(linelength){
             return table
         }
 
+function getCrossTable(){
+var cross = "<p>+</p>"
+return cross
+}
 
   var fixCross = {
-    stimulus: getCrossTable(100),
+    stimulus: getCrossTable(),
     is_html: true
   }
 
@@ -263,7 +270,7 @@ var study_info = {
 	"We do not collect data that could be used to identify you. The collected data can - in encrypted form only - be made available for other researchers.</dd></dl>"+
 	"<p style='font-size: 90%'>If you have further questions please contact: <br> Dr. Henrik Singmann, University of Zurich (singmann@psychologie.uzh.ch) or <br> Danielle Pessach, University of Zurich (danielle.pessach@uzh.ch)</p>"]	
 }
-//timeline.push(study_info);	
+timeline.push(study_info);	
 
 
   var check_consent = function(elem) {
@@ -283,7 +290,7 @@ var study_info = {
     "cont_btn": "start",
     "check_fn": check_consent
   }
-//timeline.push(consent_block);
+timeline.push(consent_block);
  
 
 
@@ -554,7 +561,7 @@ timeline.push(Intro2);
 		timing_post_trial: ITI[1],
 		timeline: breg2
 	}
-	//timeline.push(cross, b2, testrepeat, inter);
+	timeline.push(cross, b2, testrepeat, inter);
 	
 	var b3 = {
 		type: 'single-stim-wl',
@@ -565,7 +572,7 @@ timeline.push(Intro2);
 		timing_post_trial: ITI[2],
 		timeline: breg3
 	}
-	//timeline.push(cross, b3, testrepeat, inter);
+	timeline.push(cross, b3, testrepeat, inter);
 	
 	var b4 = {
 		type: 'single-stim-wl',
@@ -576,7 +583,7 @@ timeline.push(Intro2);
 		timing_post_trial: ITI[3],
 		timeline: breg4
 	}
-	//timeline.push(cross, b4, testrepeat, inter);
+	timeline.push(cross, b4, testrepeat, inter);
 
 	var b5 = {
 		type: 'single-stim-wl',
@@ -587,7 +594,7 @@ timeline.push(Intro2);
 		timing_post_trial: ITI[4],
 		timeline: breg5
 	}
-	//timeline.push(cross, b5, testrepeat, inter);
+	timeline.push(cross, b5, testrepeat, inter);
 
 	var b6 = {
 		type: 'single-stim-wl',
@@ -598,7 +605,7 @@ timeline.push(Intro2);
 		timing_post_trial: ITI[5],
 		timeline: blast
 	}
-	//timeline.push(cross, b6, testrepeat, inter);
+	timeline.push(cross, b6, testrepeat, inter);
 	
 	var b7 = {
 		type: 'single-stim-wl',
