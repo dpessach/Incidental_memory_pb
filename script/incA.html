@@ -258,16 +258,15 @@ var study_info = {
 	show_clickable_nav: true,
 	pages: ["<div class='center-content'><img src='uzhLogo.png' style='width:680px;height:150px'></img></div>"+
 	"<h3 style='text-align: center'>Study information</h3>"+
-	"<p>We would like to invite you to participate in our experiment. Please read carefully the following information.</p>"+
-	"<dl><dt style='font-size: 105%;line-height: 2;'>What is it about?</dt><dd>In this study, we try to find out what influences people's judgement abilities. "+
-	"Your task will be to make judgements about the size of different items.</dd>"+
-	"<dt style='font-size: 105%;line-height: 2;'>Duration and payment</dt><dd>The experiment will take 5-10 minutes and you will recieve the before mentioned payment regardless of your performance.</dd>"+
-	"<dt style='font-size: 105%;line-height: 2;'>Terms of participation</dt>"+
+	"<p>We would like to invite you to participate in our experiment. Please read the following information carefully.</p>"+
+	"<dl><dt style='font-size: 105%;line-height: 2;'>What is the study about?</dt><dd>The study examines how people judge the size of various items.</dd>"+
+	"<dt style='font-size: 105%;line-height: 2;'>Duration and payment:</dt><dd>The experiment will take 5-10 minutes and you will recieve the advertised amount regardless of your performance.</dd>"+
+	"<dt style='font-size: 105%;line-height: 2;'>Terms of participation:</dt>"+
 	"<dd>Participation in this study is voluntarily and you can withdraw from the study at any time without giving a reason. "+
 	"In order to do so, simply close the browser window.</dd>"+
-	"<dt style='font-size: 105%;line-height: 2;'>Possible disadvantages or risks</dt><dd>There are no disadvantages or risks known to be related to this study.</dd>"+
-	"<dt style='font-size: 105%;line-height: 2;'>Confidentiality and anonymity</dt><dd>Your anonymity is assured at all times. "+
-	"We do not collect data that could be used to identify you. The collected data can - in encrypted form only - be made available for other researchers.</dd></dl>"+
+	"<dt style='font-size: 105%;line-height: 2;'>Possible disadvantages or risks:</dt><dd>There are no disadvantages or risks known to be related to this study.</dd>"+
+	"<dt style='font-size: 105%;line-height: 2;'>Confidentiality and anonymity:</dt><dd>Your anonymity is assured at all times. "+
+	"We do not collect data that could be used to identify you. The data may be made available to researchers through the Open Science Framework, after stripping them from any identifying information.</dd></dl>"+
 	"<p style='font-size: 90%'>If you have further questions please contact: <br> Dr. Henrik Singmann, University of Zurich (singmann@psychologie.uzh.ch) or <br> Danielle Pessach, University of Zurich (danielle.pessach@uzh.ch)</p>"]	
 }
 timeline.push(study_info);	
@@ -310,7 +309,7 @@ timeline.push(instr1);
 var inter = {
 	type: 'text',
 	cont_key: [32],
-	text: '<h3 style="line-height: 1; margin-top:200px;text-align: center">Please press the spacebar to start the next trial.</h3>'
+	text: '<h3 style="line-height: 1; margin-top:200px;text-align: center">Please press the spacebar to start the next block.</h3>'
 }
 
 
@@ -319,7 +318,7 @@ var inter = {
 var infoRepeat = {
 	type: 'text',
 	cont_key: [32],
-	text: '<p><br><br><br>You made 3 or more errors when judging the size. This trial will be repeated.</p><p>Reminder:<ul><li>If the object is <strong>smaller</strong> than a soccer ball, please press the <strong>left</strong> arrow key;</li><li>if the object is <strong>larger</strong> than a soccer ball, please press the <strong>right</strong> arrow key.</li></ul><p>Please press the spacebar to continue.</p>'
+	text: '<p><br><br><br>You made 3 or more errors in your size judgments. You will have to do a new block to replace the previous one.</p><p>Reminder:<ul><li>If the object is <strong>smaller</strong> than a soccer ball, please press the <strong>left</strong> arrow key.</li><li>If the object is <strong>larger</strong> than a soccer ball, please press the <strong>right</strong> arrow key.</li></ul><p>Please press the spacebar to continue.</p>'
 }
 
 
@@ -537,11 +536,11 @@ var b1 = {
 var Intro2 = {
 	type: 'text',
 	cont_key: [32],
-	text: '<h4 style="margin-top:200px">Next follow the six test-trials.</h4>' +
+	text: '<h4 style="margin-top:200px">This was the practice block. You will continue with the six serious blocks.</h4>' +
 	'<p>Reminder:<ul><li>If the object is <strong>smaller</strong> than a soccer ball, please press the '+
-	'<strong>left</strong> arrow key;</li><li>if the object is <strong>larger</strong> than '+
+	'<strong>left</strong> arrow key.</li><li>If the object is <strong>larger</strong> than '+
 	'a soccer ball, please press the <strong>right</strong> arrow key.</li>'+
-	'<p style="line-height: 3">Press the spacebar to start the trials.</p>'
+	'<p style="line-height: 3">Press the spacebar to start the seriuos blocks.</p>'
 }
 timeline.push(Intro2);
 
